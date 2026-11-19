@@ -166,9 +166,9 @@ time, .num { font-variant-numeric: tabular-nums; }
   margin-bottom: 30px;
 }
 .hero-sub {
-  font-size: clamp(19px, 2.2vw, 26px);
-  line-height: 1.54;
-  letter-spacing: -0.014em;
+  font-size: clamp(22px, 2.8vw, 32px);
+  line-height: 1.38;
+  letter-spacing: -0.02em;
   color: var(--ink-soft);
   font-weight: 400;
   max-width: 22em;
@@ -262,9 +262,9 @@ time, .num { font-variant-numeric: tabular-nums; }
   color: var(--ink-faint); font-variant-numeric: tabular-nums;
 }
 .sec-title {
-  font-size: clamp(25px, 3vw, 31px);
+  font-size: clamp(30px, 3.8vw, 40px);
   font-weight: 600;
-  letter-spacing: -0.022em;
+  letter-spacing: -0.03em;
   line-height: 1.15;
   text-wrap: balance;
 }
@@ -389,7 +389,8 @@ time, .num { font-variant-numeric: tabular-nums; }
 /* 技术标签 */
 .tags { display: flex; flex-wrap: wrap; gap: 7px; }
 .tags li {
-  font-size: 12px; letter-spacing: 0.005em;
+  font-size: 11px; letter-spacing: 0.08em;
+  text-transform: uppercase;
   color: var(--ink-mute);
   background: var(--surface-2);
   padding: 5px 11px; border-radius: 6px;
@@ -730,7 +731,8 @@ time, .num { font-variant-numeric: tabular-nums; }
   .sec-rail {
     flex-direction: row; align-items: baseline; gap: 12px;
   }
-  .sec-title { font-size: 24px; }
+  .sec-title { font-size: 28px; }
+  .hero-sub { font-size: 21px; }
   .hero { padding: 118px 0 84px; min-height: 92svh; }
   .hero-eyebrow { font-size: 12px; margin-bottom: 22px; letter-spacing: 0.07em; }
   .hero-name { margin-bottom: 24px; }
