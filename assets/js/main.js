@@ -313,6 +313,161 @@
   fill('#foot-left', '© ' + yr + ' ' + (C.name || ''));
   fill('#foot-right', C.eyebrow || '');
 
+  /* ---------- 视觉增强：首屏入场 / 点云 / 视差 / 区块揭幕 / 卡片光晕 ---------- */
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var root = document.documentElement;
+  if (!reduce) root.classList.add('is-anim');
+
+  /* 区块标题：行遮罩 */
+  Array.prototype.forEach.call(document.querySelectorAll('.sec-title'), function (t) {
+    var txt = t.textContent;
+    t.textContent = '';
+    var r = tag('span', 'rise'), s = tag('span', null, txt);
+    r.appendChild(s); t.appendChild(r);
+  });
+
+  /* 首屏：名字逐字、副标题逐行 */
+  var heroName = $('#hero-name');
+  if (heroName && !reduce) {
+    var nm = heroName.textContent;
+    heroName.setAttribute('aria-label', nm);
+    heroName.textContent = '';
+    Array.prototype.forEach.call(nm, function (c, i) {
+      var sp = tag('span', 'ch', c);
+      sp.setAttribute('aria-hidden', 'true');
+      sp.style.setProperty('--i', i);
+      heroName.appendChild(sp);
+    });
+    var hs = $('#hero-sub');
+    if (hs) {
+      var st = hs.textContent;
+      hs.textContent = '';
+      var r2 = tag('span', 'rise'), s2 = tag('span', null, st);
+      r2.style.setProperty('--rd', '.55s');
+      r2.appendChild(s2); hs.appendChild(r2);
+    }
+    var he = $('#hero-eyebrow');
+    if (he) {
+      var et = he.textContent;
+      he.textContent = '';
+      var r3 = tag('span', 'rise'), s3 = tag('span', null, et);
+      r3.style.setProperty('--rd', '.1s');
+      r3.appendChild(s3); he.appendChild(r3);
+    }
+  }
+  requestAnimationFrame(function () {
+    requestAnimationFrame(function () { root.classList.add('is-ready'); });
+  });
+
+  /* 首屏背景：漂移点云，随指针轻微偏移 */
+  var hero = $('.hero');
+  if (hero && !reduce) {
+    var cv = tag('canvas', 'hero-canvas');
+    cv.setAttribute('aria-hidden', 'true');
+    hero.insertBefore(cv, hero.firstChild);
+    var ctx = cv.getContext('2d');
+    var W = 0, H = 0, dpr = Math.min(window.devicePixelRatio || 1, 2), pts = [];
+    var mouse = { x: 0.5, y: 0.4 }, vis = true;
+    var resize = function () {
+      W = hero.clientWidth; H = hero.clientHeight;
+      cv.width = W * dpr; cv.height = H * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      var n = Math.round(Math.min(150, Math.max(50, W * H / 12000)));
+      pts = [];
+      for (var i = 0; i < n; i++) {
+        pts.push({ x: Math.random() * W, y: Math.random() * H, z: Math.random() * 0.9 + 0.1,
+          vx: (Math.random() - .5) * .12, vy: (Math.random() - .5) * .12 });
+      }
+    };
+    resize();
+    window.addEventListener('resize', resize);
+    hero.addEventListener('pointermove', function (e) {
+      var b = hero.getBoundingClientRect();
+      mouse.x = (e.clientX - b.left) / b.width;
+      mouse.y = (e.clientY - b.top) / b.height;
+      hero.style.setProperty('--mx', (mouse.x * 100) + '%');
+      hero.style.setProperty('--my', (mouse.y * 100) + '%');
+    });
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (es) { vis = es[0].isIntersecting; }).observe(hero);
+    }
+    var LINK = 110;
+    (function draw() {
+      requestAnimationFrame(draw);
+      if (!vis || document.hidden) return;
+      ctx.clearRect(0, 0, W, H);
+      var ox = (mouse.x - .5) * 26, oy = (mouse.y - .5) * 26;
+      for (var i = 0; i < pts.length; i++) {
+        var p = pts[i];
+        p.x += p.vx; p.y += p.vy;
+        if (p.x < -10) p.x = W + 10; else if (p.x > W + 10) p.x = -10;
+        if (p.y < -10) p.y = H + 10; else if (p.y > H + 10) p.y = -10;
+        p.sx = p.x + ox * p.z; p.sy = p.y + oy * p.z;
+        ctx.fillStyle = 'rgba(214,228,200,' + (0.18 + p.z * 0.5) + ')';
+        ctx.beginPath(); ctx.arc(p.sx, p.sy, p.z * 1.5, 0, 6.283); ctx.fill();
+      }
+      ctx.lineWidth = 0.6;
+      for (var a = 0; a < pts.length; a++) {
+        for (var b2 = a + 1; b2 < pts.length; b2++) {
+          var dx = pts[a].sx - pts[b2].sx, dy = pts[a].sy - pts[b2].sy;
+          var d = dx * dx + dy * dy;
+          if (d < LINK * LINK) {
+            ctx.strokeStyle = 'rgba(180,204,159,' + (0.16 * (1 - Math.sqrt(d) / LINK)) + ')';
+            ctx.beginPath(); ctx.moveTo(pts[a].sx, pts[a].sy); ctx.lineTo(pts[b2].sx, pts[b2].sy); ctx.stroke();
+          }
+        }
+      }
+    })();
+  }
+
+  /* 阅读进度 + 首屏视差 + 栏头视差 */
+  var bar = tag('div', 'progress');
+  bar.setAttribute('aria-hidden', 'true');
+  document.body.appendChild(bar);
+  var ticking = false;
+  function onScrollFx() {
+    ticking = false;
+    var y = window.scrollY, h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.setProperty('--p', h > 0 ? (y / h).toFixed(4) : 0);
+    if (hero && !reduce && y < window.innerHeight * 1.2) {
+      var g = $('.hero-grid', hero), c = $('.hero-canvas', hero);
+      if (g) {
+        g.style.transform = 'translateY(' + (y * 0.16).toFixed(1) + 'px)';
+        g.style.opacity = Math.max(0, 1 - y / (window.innerHeight * 0.85)).toFixed(3);
+      }
+      if (c) c.style.transform = 'translateY(' + (y * 0.32).toFixed(1) + 'px)';
+    }
+  }
+  window.addEventListener('scroll', function () {
+    if (!ticking) { ticking = true; requestAnimationFrame(onScrollFx); }
+  }, { passive: true });
+  onScrollFx();
+
+  /* 区块：clip-path 揭幕（首个区块以外） */
+  var secs = document.querySelectorAll('.sec');
+  if (!reduce && 'IntersectionObserver' in window) {
+    var sio = new IntersectionObserver(function (es) {
+      es.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add('sec-in'); sio.unobserve(en.target); }
+      });
+    }, { threshold: 0.04 });
+    Array.prototype.forEach.call(secs, function (s) {
+      if (page === 'home') s.setAttribute('data-clip', '');
+      sio.observe(s);
+    });
+  } else {
+    Array.prototype.forEach.call(secs, function (s) { s.classList.add('sec-in'); });
+  }
+
+  /* 卡片：光晕跟随指针（事件委托） */
+  document.addEventListener('pointermove', function (e) {
+    var card = e.target.closest && e.target.closest('.work, .edu, .post-item');
+    if (!card) return;
+    var b = card.getBoundingClientRect();
+    card.style.setProperty('--cx', (e.clientX - b.left) + 'px');
+    card.style.setProperty('--cy', (e.clientY - b.top) + 'px');
+  });
+
   /* ---------- 入场动画 ---------- */
   var items = document.querySelectorAll('[data-reveal]');
   if (!items.length) return;
