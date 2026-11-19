@@ -3,6 +3,11 @@ name: Deploy
 on:
   push:
     branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   deploy:
@@ -10,22 +15,43 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Check deploy secrets
+        id: preflight
+        env:
+          VPS_SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_USER: ${{ secrets.VPS_USER }}
+        run: |
+          missing=""
+          [ -z "$VPS_SSH_KEY" ] && missing="$missing VPS_SSH_KEY"
+          [ -z "$VPS_HOST" ]    && missing="$missing VPS_HOST"
+          [ -z "$VPS_USER" ]    && missing="$missing VPS_USER"
+          if [ -n "$missing" ]; then
+            echo "::notice title=Deploy skipped::未配置 secrets:$missing。站点已提交到仓库，配置后重新运行本次工作流即可部署。"
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Set up SSH
+        if: steps.preflight.outputs.ready == 'true'
         env:
           VPS_SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
           VPS_HOST: ${{ secrets.VPS_HOST }}
         run: |
           mkdir -p ~/.ssh
-          echo "$VPS_SSH_KEY" > ~/.ssh/id_deploy
+          printf '%s\n' "$VPS_SSH_KEY" > ~/.ssh/id_deploy
           chmod 600 ~/.ssh/id_deploy
           ssh-keyscan -H "$VPS_HOST" >> ~/.ssh/known_hosts
 
       - name: Rsync to VPS
+        if: steps.preflight.outputs.ready == 'true'
         env:
           VPS_HOST: ${{ secrets.VPS_HOST }}
           VPS_USER: ${{ secrets.VPS_USER }}
         run: |
           rsync -avz --delete \
-            --exclude '.git' --exclude '.github' --exclude '.gitignore' --exclude 'README.md' \
+            --exclude '.git' --exclude '.github' --exclude '.gitignore' \
+            --exclude 'README.md' --exclude '.task.md' \
             -e "ssh -i ~/.ssh/id_deploy" \
             ./ "$VPS_USER@$VPS_HOST:/var/www/zhangyang-me/"
