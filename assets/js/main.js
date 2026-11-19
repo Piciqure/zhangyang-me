@@ -330,7 +330,7 @@
         io.unobserve(en.target);
       }
     });
-  }, { threshold: 0.08, rootMargin: '0px 0px -6% 0px' });
+  }, { threshold: 0.1, rootMargin: '0px 0px -10% 0px' });
 
   Array.prototype.forEach.call(items, function (n) { io.observe(n); });
 })();
