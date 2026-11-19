@@ -1,63 +1,139 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="张洋的个人主页：AI 三维重建、世界模型、自动驾驶仿真。">
-  <meta name="color-scheme" content="light dark">
-  <title>张洋 · 个人主页</title>
-  <link rel="stylesheet" href="assets/css/style.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="张洋 — AI 三维重建、世界模型与自动驾驶仿真的个人作品集。东北大学控制工程硕士，2027 届。">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+<title>张洋 — AI 三维重建 · 世界模型 · 自动驾驶仿真</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231d1d1f'/%3E%3Ctext x='32' y='46' font-family='PingFang SC,Microsoft YaHei,sans-serif' font-size='40' font-weight='600' fill='%23ffffff' text-anchor='middle'%3E张%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body data-page="home">
-  <nav class="nav" aria-label="主导航">
-    <div class="wrap"><a class="brand" href="#top"></a><ul></ul></div>
-  </nav>
+<a class="skip" href="#main">跳到正文</a>
 
-  <main id="top">
-    <header class="hero">
-      <div class="wrap">
-        <h1 id="hero-name"></h1>
-        <p class="sub" id="hero-sub"></p>
+<nav class="nav" aria-label="主导航">
+  <div class="wrap nav-inner">
+    <a class="brand" href="index.html" aria-label="张洋 首页"><span id="nav-name">张洋</span></a>
+    <ul class="nav-links" id="nav-links"></ul>
+  </div>
+</nav>
+
+<main id="main">
+  <!-- 首屏 -->
+  <header class="hero">
+    <div class="wrap hero-grid">
+      <div class="hero-main">
+        <p class="hero-eyebrow" id="hero-eyebrow"></p>
+        <h1 class="hero-name" id="hero-name"></h1>
+        <p class="hero-sub" id="hero-sub"></p>
+        <p class="hero-meta" id="hero-meta"></p>
         <div class="actions">
-          <a class="btn primary" href="#projects">查看项目</a>
-          <a class="btn ghost" id="resume-link" href="#">下载简历</a>
+          <a class="btn primary" href="#work">查看项目</a>
+          <a class="btn ghost" id="resume-link" href="assets/resume.pdf">下载简历</a>
         </div>
       </div>
-    </header>
+      <aside class="hero-index" aria-label="页面索引">
+        <p class="hero-index-label">Index</p>
+        <ul id="hero-index"></ul>
+      </aside>
+    </div>
+    <a class="scroll-hint" href="#about" aria-label="向下滚动">
+      <span></span>
+    </a>
+  </header>
 
-    <section id="about" class="alt">
-      <div class="wrap narrow">
-        <h2 class="reveal">关于</h2>
-        <div class="about reveal" id="about-body"></div>
+  <!-- 关于 -->
+  <section id="about" class="sec">
+    <div class="wrap sec-grid">
+      <div class="sec-rail">
+        <span class="sec-no">01</span>
+        <h2 class="sec-title" data-reveal>关于</h2>
       </div>
-    </section>
-
-    <section id="projects">
-      <div class="wrap">
-        <h2 class="reveal">精选项目</h2>
-        <div class="grid two" id="project-grid"></div>
+      <div class="sec-body">
+        <div class="prose" id="about-body" data-reveal></div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <section id="skills" class="alt">
-      <div class="wrap">
-        <h2 class="reveal">技能</h2>
-        <dl class="skills" id="skill-list"></dl>
+  <!-- 项目 -->
+  <section id="work" class="sec sec-alt">
+    <div class="wrap sec-grid">
+      <div class="sec-rail">
+        <span class="sec-no">02</span>
+        <h2 class="sec-title" data-reveal>项目</h2>
       </div>
-    </section>
-
-    <section id="contact">
-      <div class="wrap contact reveal">
-        <h2>联系</h2>
-        <p id="contact-intro"></p>
-        <a class="mail" id="mail" href="#"></a>
-        <div class="links"><a id="github" href="#" rel="noopener">GitHub</a></div>
+      <div class="sec-body">
+        <div class="work-list" id="work-list"></div>
       </div>
-    </section>
-  </main>
+    </div>
+  </section>
 
-  <footer><small>© <span id="year"></span></small></footer>
-  <script src="assets/js/content.js"></script>
-  <script src="assets/js/main.js"></script>
+  <!-- 实习 -->
+  <section id="experience" class="sec">
+    <div class="wrap sec-grid">
+      <div class="sec-rail">
+        <span class="sec-no">03</span>
+        <h2 class="sec-title" data-reveal>实习</h2>
+      </div>
+      <div class="sec-body">
+        <div class="work-list" id="exp-list"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 教育 -->
+  <section id="education" class="sec sec-alt">
+    <div class="wrap sec-grid">
+      <div class="sec-rail">
+        <span class="sec-no">04</span>
+        <h2 class="sec-title" data-reveal>教育</h2>
+      </div>
+      <div class="sec-body">
+        <div class="edu-list" id="edu-list"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 技能 -->
+  <section id="skills" class="sec">
+    <div class="wrap sec-grid">
+      <div class="sec-rail">
+        <span class="sec-no">05</span>
+        <h2 class="sec-title" data-reveal>技能</h2>
+      </div>
+      <div class="sec-body">
+        <div class="skill-list" id="skill-list"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 联系 -->
+  <section id="contact" class="sec sec-contact">
+    <div class="wrap sec-grid">
+      <div class="sec-rail">
+        <span class="sec-no">06</span>
+        <h2 class="sec-title" data-reveal>联系</h2>
+      </div>
+      <div class="sec-body">
+        <p class="contact-intro" id="contact-intro" data-reveal></p>
+        <a class="contact-mail" id="mail" href="#"></a>
+        <dl class="contact-meta" id="contact-meta"></dl>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-inner">
+    <span id="foot-left"></span>
+    <span id="foot-right"></span>
+  </div>
+</footer>
+
+<script src="assets/js/content.js"></script>
+<script src="assets/js/main.js"></script>
 </body>
 </html>

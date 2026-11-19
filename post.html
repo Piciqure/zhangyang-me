@@ -1,28 +1,45 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="color-scheme" content="light dark">
-  <title>文章</title>
-  <link rel="stylesheet" href="assets/css/style.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="张洋的技术笔记。">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+<title>笔记 — 张洋</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231d1d1f'/%3E%3Ctext x='32' y='46' font-family='PingFang SC,Microsoft YaHei,sans-serif' font-size='40' font-weight='600' fill='%23ffffff' text-anchor='middle'%3E张%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="assets/css/style.css">
 </head>
-<body data-page="post" class="has-nav-pad">
-  <nav class="nav always" aria-label="主导航">
-    <div class="wrap"><a class="brand" href="index.html"></a><ul></ul></div>
-  </nav>
+<body data-page="post">
+<a class="skip" href="#main">跳到正文</a>
 
-  <main>
-    <section style="padding-top:72px">
-      <div class="wrap narrow">
-        <a class="back" href="blog.html">← 返回博客</a>
-        <article class="article" id="article"></article>
+<nav class="nav nav-solid" aria-label="主导航">
+  <div class="wrap nav-inner">
+    <a class="brand" href="index.html" aria-label="张洋 首页"><span id="nav-name">张洋</span></a>
+    <ul class="nav-links" id="nav-links"></ul>
+  </div>
+</nav>
+
+<main id="main">
+  <article class="article-wrap">
+    <div class="wrap">
+      <div class="measure">
+        <a class="back" href="blog.html"><span>←</span> 返回笔记</a>
+        <div id="article"></div>
       </div>
-    </section>
-  </main>
+    </div>
+  </article>
+</main>
 
-  <footer><small>© <span id="year"></span></small></footer>
-  <script src="assets/js/content.js"></script>
-  <script src="assets/js/main.js"></script>
+<footer class="foot">
+  <div class="wrap foot-inner">
+    <span id="foot-left"></span>
+    <span id="foot-right"></span>
+  </div>
+</footer>
+
+<script src="assets/js/content.js"></script>
+<script src="assets/js/main.js"></script>
 </body>
 </html>
